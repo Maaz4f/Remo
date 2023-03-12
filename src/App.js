@@ -331,6 +331,7 @@ function App() {
                     rows={1}
                     value={response}
                     onChange={handleresponseChange}
+                    readOnly
                   />
                 ) : (
                   <textarea
@@ -338,6 +339,7 @@ function App() {
                     rows={1}
                     value={response}
                     onChange={handleresponseChange}
+                    readOnly
                   />
                 )}
 
