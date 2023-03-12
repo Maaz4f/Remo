@@ -6,8 +6,10 @@ import user from './assets/user.png';
 import './Show.css'
 import { ReactComponent as MoonIcon } from './assets/MoonIcon.svg';
 import { ReactComponent as SunIcon } from './assets/SunIcon.svg';
+// import AiAssist from './AiAssist';
 // Main Function 
 function App() {
+ 
 // Function to change Themes
   function toggleTheme() {
     const theme = "dark"; 
@@ -31,6 +33,9 @@ function App() {
   const [models, setModels] = useState([]);
   const [currentModel, setCurrentModel] = useState('aurora');
   const [showresta, setshowresta] = useState(true);
+  // const [state, setState] = useState(null);
+
+
   function toggleTheme() {
     setTheme(theme === 'light' ? 'dark' : 'light');
   }
@@ -105,7 +110,98 @@ function App() {
       setshowresta(true);
     
   }
+  let timer;
+  let hasReceivedResponse = false;
+  async function handleChange(input, setIsWaitingForResponse) {
+    clearTimeout(timer);
+    if (isWaitingForResponse) {
+      return;
+    }
+    timer = setTimeout(async () => {
+      try {
+        setIsWaitingForResponse(true);
+        const response = await fetch('https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/suggest', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: `Q:Finish My Thought : Hello how are A:you? Finish My Thought:${input}`,
+            engine: `gpt-3.5-turbo`,
+          }),
+        });
+        const { message } = await response.json();
+        const teq = `${message}`;
+        console.log(teq);
+        setIsWaitingForResponse(true);
+      } catch (error) {
+        console.error(error);
+        setIsWaitingForResponse(true);
+      }
+    }, 3000);
+  }
+  
+  const [response, setResponse] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
 
+  function handleInputChange(event) {
+    setInput(event.target.value);
+  }
+
+  useEffect(() => {
+    let timer;
+    if (input !== '') {
+      setIsTyping(true);
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fetchResponse(input);
+        setIsTyping(false);
+      }, 3000);
+    } else {
+      setIsTyping(false);
+      setResponse('');
+    }
+    return () => clearTimeout(timer);
+  }, [input]);
+  const fetchResponse = async (input) => {
+    const response = await fetch('https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/suggest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: `You are a text completion bot just complete the text and don't give any revelant awnsers to the prompt just complete them. Q:Hello how are A:you? Finish My Thought:${input}`,
+        engine: `gpt-3.5-turbo`,
+      }),
+    });
+    const { message } = await response.json();
+    setResponse(message);
+    setIsTyping(true);
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Tab') {
+      setInput(`${input}` + `${response}`);
+      setIsTyping(false);
+    }
+    else if (e.key === 'ArrowRight') {
+      setInput(`${input}` + `${response}`);
+      setIsTyping(false);
+    }
+    else if (e.key === 'Backspace') {
+      setInput(`${input}` + `${response}`);
+      setIsTyping(false);
+    }
+    else if (e.key === 'ArrowLeft') {
+      setInput(`${input}` + `${response}`);
+      setIsTyping(false);
+    }
+    console.log(e.key);
+  };
+  function handleresponseChange(event) {
+    event.target.value = `${response}`;
+  }
+  
   return (
     <>
       <div className={`App ${theme}`}>
@@ -185,20 +281,7 @@ function App() {
       </div>
     </div>
   </div>
-                <div className="chat-input-holder">
-                  <form onSubmit={handleSubmit}>
-                    <input
-                      className={`chat-input-textarea ${theme}`}
-                      rows={1}
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                    />
-                  </form>
-                  <h6
-              className={`research ${theme}`}
-            >
-              Remotine March 4 Version. Our goal is to make AI systems more natural and safe to interact with. Your feedback will help us improve. If you want to buy our API, please contact us at +923034973191 or email us at maazsaeed726@gmail.com.</h6>
-                </div>
+               
                 </div>
             ) : (
               <div className="chat-page">
@@ -227,26 +310,50 @@ function App() {
                     </div>
                   </div>
                 ))}
-                <div className="chat-input-holder">
-                  <form onSubmit={handleSubmit}>
-                    <input
-                      className={`chat-input-textarea ${theme}`}
-                      rows={1}
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                    />
-                  </form>
-                  <h6
+               
+                          
+              </div>
+            )};
+          
+          <div className="chat-input-holder">
+              <form onSubmit={handleSubmit}>
+                <input
+                  className={`chat-input-textarea ${theme}`}
+                  rows={1}
+                  value={input}
+                  type="text"
+                  onKeyDown={handleKeyDown} 
+                  onChange={handleInputChange}  
+                />
+                {isTyping ? (
+                  <textarea
+                    className={`chat-input-textarea ${theme}`}
+                    rows={1}
+                    value={response}
+                    onChange={handleresponseChange}
+                  />
+                ) : (
+                  <textarea
+                    className={`chat-input-textarea ${theme}`}
+                    rows={1}
+                    value={response}
+                    onChange={handleresponseChange}
+                  />
+                )}
+
+                 <h6
               className={`research ${theme}`}
             >
               Remotine March 4 Version. Our goal is to make AI systems more natural and safe to interact with. Your feedback will help us improve. If you want to buy our API, please contact us at +923034973191 or email us at maazsaeed726@gmail.com.</h6>
+              </form>
+
+            </div>
                 </div>
-              </div>
-            )}
-          </div>
-          
+               
         </section>
+        
       </div>
+      
     </>
   );
   
