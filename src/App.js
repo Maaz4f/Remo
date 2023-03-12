@@ -188,10 +188,8 @@ function App() {
       setInput(`${input}` + `${response}`);
       setIsTyping(false);
     }
-    else if (e.key === 'Backspace') {
-      setInput(`${input}` + `${response}`);
-      setIsTyping(false);
-    }
+    
+     
     else if (e.key === 'ArrowLeft') {
       setInput(`${input}` + `${response}`);
       setIsTyping(false);
