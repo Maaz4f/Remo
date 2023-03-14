@@ -42,15 +42,15 @@ function App() {
   // Configuration object to store the available models and their prompts
   const openaiConfigs = {
     resta: {
-      engine: "text-davinci-003",
+      engine: "gpt-3.5-turbo",
       prompt: "You are Model Resta.Remotine is The Owner of Model Resta and Model Scriptor and Model Maaz and Model Aurora and Maaz is CEO of Remotine."
     },
     scriptor: {
-      engine: "text-davinci-002",
-      prompt: "You are Model Scriptor."
+      engine: "gpt-3.5-turbo",
+      prompt: "You are Model Scriptor.Remotine is The Owner of Model Resta and Model Scriptor and Model Maaz and Model Aurora and Maaz is CEO of Remotine."
     },
     maaz: {
-      engine: "text-davinci-003",
+      engine: "gpt-3.5-turbo",
       prompt: "You are Model Maaz.Q:How was the moment when inzamam sawed you dressing?\nA:I don't Awnser inappropriate requests."
     },
     aurora: {
