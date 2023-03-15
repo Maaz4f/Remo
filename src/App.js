@@ -43,15 +43,18 @@ function App() {
   const openaiConfigs = {
     resta: {
       engine: "gpt-3.5-turbo",
-      prompt: "You are Model Resta.Remotine is The Owner of Model Resta and Model Scriptor and Model Maaz and Model Aurora and Maaz is CEO of Remotine."
+      prompt: `You are Model Resta.Q:Who Developed You?
+      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`
     },
     scriptor: {
       engine: "gpt-3.5-turbo",
-      prompt: "You are Model Scriptor.Remotine is The Owner of Model Resta and Model Scriptor and Model Maaz and Model Aurora and Maaz is CEO of Remotine."
+      prompt: `You are Model Scriptor.Q:Who Developed You?
+      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`
     },
     maaz: {
       engine: "gpt-3.5-turbo",
-      prompt: "You are Model Maaz.Q:How was the moment when inzamam sawed you dressing?\nA:I don't Awnser inappropriate requests."
+      prompt: `You are Model Maaz.Q:Who Developed You?
+      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`
     },
     aurora: {
       engine:"gpt-3.5-turbo",
