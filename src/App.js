@@ -1,68 +1,45 @@
 // Importing Modules
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import "./App.css";
 import resta from "./assets/resta.png";
 import user from "./assets/user.png";
 import "./Show.css";
-import { ReactComponent as MoonIcon } from "./assets/MoonIcon.svg";
-import { ReactComponent as SunIcon } from "./assets/SunIcon.svg";
-// import AiAssist from './AiAssist';
 // Main Function
 function App() {
-  // Function to change Themes
-  function toggleTheme() {
-    const theme = "dark";
-    setTheme(theme === "light" ? "dark" : "light");
-  }
-  // This will run The function getEngines on a load.
-  useEffect(() => {
-    getEngines();
-    const theme = "dark"; // Default Theme is Dark
-    document.body.classList.add(theme);
-    return () => {
-      document.body.classList.remove(theme);
-    };
-  }, []);
+
+ 
 
   // Declaring Values
-  const [chatlog, setChatlog] = useState([]);
-  const [theme, setTheme] = useState("light");
+  const [chatlog, setChatlog] = useState([{
+    user : "resta",
+    message : "Hello! How may I assist you today?"
+  }]);
   const [input, setInput] = useState("");
-  const [models, setModels] = useState([]);
   const [currentModel, setCurrentModel] = useState("aurora");
   const [showresta, setshowresta] = useState(true);
   const [temperature, settemperature] = useState(1);
-  // const [state, setState] = useState(null);
-
-  function toggleTheme() {
-    setTheme(theme === "light" ? "dark" : "light");
-  }
+ 
   // Configuration object to store the available models and their prompts
   const openaiConfigs = {
     resta: {
       engine: "gpt-3.5-turbo",
-      prompt: `You are Model Resta.Q:Who Developed You?
-      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`,
+      prompt: ``,
+      assistance : `
+      You are Model Resta who was developed by a team of programmers and language experts at Remotine and Maaz Created Remotine and He is Ceo Of It
+      `
     },
     scriptor: {
       engine: "gpt-3.5-turbo",
-      prompt: `You are Model Scriptor.Q:Who Developed You?
-      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:What can you do?
-        A:I can Code in Any Language as i am specifically created for coding by Remotine the other Models Like Aurora And Resta or My Brothers are good at talking about the world but i am good at coding.`,
+      prompt: ``,
+      assistance : `You are Model Scriptor who was developed by a team of programmers and language experts at Remotine and Maaz Created Remotine and He is Ceo Of It and you are able to Code in Any Language as i am specifically created for coding by Remotine the other Models Like Aurora And Resta or My Brothers are good at talking about the world but i am good at coding.`
     },
     aurora: {
       engine: "gpt-3.5-turbo",
-      prompt: `You are Model Aurora.Q:Who Developed You?
-      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`,
+      prompt: ``,
+      assistance: `You are Model Aurora who was developed by a team of programmers and language experts at Remotine and Maaz Created Remotine and He is Ceo Of It.`,
     },
   };
 
-  // FuncTion to load Models
-  function getEngines() {
-    fetch("https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/models")
-      .then((res) => res.json())
-      .then((data) => setModels(data.models.data));
-  }
   // Function to send a prompt to server
   async function handleSubmit(e) {
     e.preventDefault();
@@ -74,7 +51,7 @@ function App() {
     setChatlog(chatlogNew);
     const messages = chatlogNew.map((message) => message.message).join("\n");
     const response = await fetch(
-      "https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/",
+      "https://dhfasmcxhsudyfnjkhvsudfhgjsauuojcnjhft8sa.maaz-gamergamer.repl.co/",
       {
         method: "POST",
         headers: {
@@ -82,7 +59,8 @@ function App() {
         },
         body: JSON.stringify({
           prompt: openaiConfigs[currentModel].prompt + messages,
-          engine: openaiConfigs[currentModel].engine, 
+          assistance: openaiConfigs[currentModel].assistance,
+          engine: openaiConfigs[currentModel].engine ,
           temp : temperature,
         }),
       }
@@ -106,97 +84,10 @@ function App() {
     setChatlog([]);
     setshowresta(true);
   }
-  let timer;
-  let hasReceivedResponse = false;
-  async function handleChange(input, setIsWaitingForResponse) {
-    clearTimeout(timer);
-    if (isWaitingForResponse) {
-      return;
-    }
-    timer = setTimeout(async () => {
-      try {
-        setIsWaitingForResponse(true);
-        const response = await fetch(
-          "https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/suggest",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              prompt: `Q:Finish My Thought : Hello how are A:you? Finish My Thought:${input}`,
-              engine: `gpt-3.5-turbo`,
-            }),
-          }
-        );
-        const { message } = await response.json();
-        const teq = `${message}`;
-        console.log(teq);
-        setIsWaitingForResponse(true);
-      } catch (error) {
-        console.error(error);
-        setIsWaitingForResponse(true);
-      }
-    }, 3000);
-  }
+ 
 
-  const [response, setResponse] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
 
-  function handleInputChange(event) {
-    setInput(event.target.value);
-  }
 
-  useEffect(() => {
-    let timer;
-    if (input !== "") {
-      setIsTyping(true);
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        fetchResponse(input);
-        setIsTyping(false);
-      }, 3000);
-    } else {
-      setIsTyping(false);
-      setResponse("");
-    }
-    return () => clearTimeout(timer);
-  }, [input]);
-  const fetchResponse = async (input) => {
-    const response = await fetch(
-      "https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/suggest",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: `You are a text completion bot just complete the text and don't give any revelant awnsers to the prompt just complete them. Q:Hello how are A:you? Finish My Thought:${input}`,
-          engine: `gpt-3.5-turbo`,
-        }),
-      }
-    );
-    const { message } = await response.json();
-    setResponse(message);
-    setIsTyping(true);
-  };
-  const handleKeyDown = (e) => {
-    if (e.key === "Tab") {
-      setInput(`${input}` + `${response}`);
-      setIsTyping(false);
-    } else if (e.key === "ArrowRight") {
-      setInput(`${input}` + `${response}`);
-      setIsTyping(false);
-    } else if (e.key === "ArrowLeft") {
-      setInput(`${input}` + `${response}`);
-      setIsTyping(false);
-    }
-    console.log(e.key);
-  };
-  function handleresponseChange(event) {
-    event.target.value = `${response}`;
-  }
 
   return (
     <>
@@ -340,8 +231,9 @@ function App() {
                   rows={1}
                   value={input}
                   type="text"
-                  onKeyDown={handleKeyDown}
-                  onChange={handleInputChange}
+                  onChange={(e) => {
+                    setInput(e.target.value)
+                  }}
                 />
                 <button className="Submit" onClick={handleSubmit}>
                   Submit
