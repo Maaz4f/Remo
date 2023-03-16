@@ -1,19 +1,18 @@
-// Importing Modules 
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import resta from './assets/resta.png';
-import user from './assets/user.png';
-import './Show.css'
-import { ReactComponent as MoonIcon } from './assets/MoonIcon.svg';
-import { ReactComponent as SunIcon } from './assets/SunIcon.svg';
+// Importing Modules
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import resta from "./assets/resta.png";
+import user from "./assets/user.png";
+import "./Show.css";
+import { ReactComponent as MoonIcon } from "./assets/MoonIcon.svg";
+import { ReactComponent as SunIcon } from "./assets/SunIcon.svg";
 // import AiAssist from './AiAssist';
-// Main Function 
+// Main Function
 function App() {
- 
-// Function to change Themes
+  // Function to change Themes
   function toggleTheme() {
-    const theme = "dark"; 
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    const theme = "dark";
+    setTheme(theme === "light" ? "dark" : "light");
   }
   // This will run The function getEngines on a load.
   useEffect(() => {
@@ -24,94 +23,88 @@ function App() {
       document.body.classList.remove(theme);
     };
   }, []);
-  
-  
+
   // Declaring Values
   const [chatlog, setChatlog] = useState([]);
-  const [theme, setTheme] = useState('light');
-  const [input, setInput] = useState('');
+  const [theme, setTheme] = useState("light");
+  const [input, setInput] = useState("");
   const [models, setModels] = useState([]);
-  const [currentModel, setCurrentModel] = useState('aurora');
+  const [currentModel, setCurrentModel] = useState("aurora");
   const [showresta, setshowresta] = useState(true);
+  const [temperature, settemperature] = useState(1);
   // const [state, setState] = useState(null);
 
-
   function toggleTheme() {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    setTheme(theme === "light" ? "dark" : "light");
   }
   // Configuration object to store the available models and their prompts
   const openaiConfigs = {
     resta: {
       engine: "gpt-3.5-turbo",
       prompt: `You are Model Resta.Q:Who Developed You?
-      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`
+      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`,
     },
     scriptor: {
       engine: "gpt-3.5-turbo",
       prompt: `You are Model Scriptor.Q:Who Developed You?
-      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`
-    },
-    maaz: {
-      engine: "gpt-3.5-turbo",
-      prompt: `You are Model Maaz.Q:Who Developed You?
-      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`
+      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:What can you do?
+        A:I can Code in Any Language as i am specifically created for coding by Remotine the other Models Like Aurora And Resta or My Brothers are good at talking about the world but i am good at coding.`,
     },
     aurora: {
-      engine:"gpt-3.5-turbo",
-      prompt:`You are Model Aurora.Q:Who Developed You?
-      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`
-    }
-    
+      engine: "gpt-3.5-turbo",
+      prompt: `You are Model Aurora.Q:Who Developed You?
+      I was developed by a team of programmers and language experts at Remotine.Q:Who Created Remotine?\n A: Maaz Created Remotine and He is Ceo Of It.Q:`,
+    },
   };
 
-
-// FuncTion to load Models
+  // FuncTion to load Models
   function getEngines() {
-    fetch('https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/models')
+    fetch("https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/models")
       .then((res) => res.json())
       .then((data) => setModels(data.models.data));
   }
-// Function to send a prompt to server 
+  // Function to send a prompt to server
   async function handleSubmit(e) {
     e.preventDefault();
     if (showresta) {
       setshowresta(false);
     }
-    let chatlogNew = [...chatlog, { user: 'user', message: `${input}` }];
-    setInput('');
+    let chatlogNew = [...chatlog, { user: "user", message: `${input}` }];
+    setInput("");
     setChatlog(chatlogNew);
-    const messages = chatlogNew.map((message) => message.message).join('\n');
-    const response = await fetch('https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: openaiConfigs[currentModel].prompt + messages,
-        engine: openaiConfigs[currentModel].engine,
-      }),
-    });
+    const messages = chatlogNew.map((message) => message.message).join("\n");
+    const response = await fetch(
+      "https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: openaiConfigs[currentModel].prompt + messages,
+          engine: openaiConfigs[currentModel].engine, 
+          temp : temperature,
+        }),
+      }
+    );
     const { message } = await response.json();
     const teq = `${message}`;
-    console.log(teq)
-    const keyword = 'A:';
+    console.log(teq);
+    const keyword = "A:";
     const index = teq.indexOf(keyword);
     if (index !== -1) {
       const substr = teq.substring(index + keyword.length);
       console.log(substr.trim());
 
-      setChatlog([...chatlogNew, { user: 'resta', message: substr.trim() }]);
+      setChatlog([...chatlogNew, { user: "resta", message: substr.trim() }]);
     } else {
-        setChatlog([...chatlogNew, { user: 'resta', message: `${message}` }]);
+      setChatlog([...chatlogNew, { user: "resta", message: `${message}` }]);
     }
   }
-  
-  
 
   function clearChat() {
     setChatlog([]);
-      setshowresta(true);
-    
+    setshowresta(true);
   }
   let timer;
   let hasReceivedResponse = false;
@@ -123,16 +116,19 @@ function App() {
     timer = setTimeout(async () => {
       try {
         setIsWaitingForResponse(true);
-        const response = await fetch('https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/suggest', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            prompt: `Q:Finish My Thought : Hello how are A:you? Finish My Thought:${input}`,
-            engine: `gpt-3.5-turbo`,
-          }),
-        });
+        const response = await fetch(
+          "https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/suggest",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              prompt: `Q:Finish My Thought : Hello how are A:you? Finish My Thought:${input}`,
+              engine: `gpt-3.5-turbo`,
+            }),
+          }
+        );
         const { message } = await response.json();
         const teq = `${message}`;
         console.log(teq);
@@ -143,8 +139,8 @@ function App() {
       }
     }, 3000);
   }
-  
-  const [response, setResponse] = useState('');
+
+  const [response, setResponse] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
 
@@ -154,7 +150,7 @@ function App() {
 
   useEffect(() => {
     let timer;
-    if (input !== '') {
+    if (input !== "") {
       setIsTyping(true);
       clearTimeout(timer);
       timer = setTimeout(() => {
@@ -163,37 +159,36 @@ function App() {
       }, 3000);
     } else {
       setIsTyping(false);
-      setResponse('');
+      setResponse("");
     }
     return () => clearTimeout(timer);
   }, [input]);
   const fetchResponse = async (input) => {
-    const response = await fetch('https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/suggest', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: `You are a text completion bot just complete the text and don't give any revelant awnsers to the prompt just complete them. Q:Hello how are A:you? Finish My Thought:${input}`,
-        engine: `gpt-3.5-turbo`,
-      }),
-    });
+    const response = await fetch(
+      "https://LegitimateIvoryLivedistro.maaz-gamergamer.repl.co/suggest",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt: `You are a text completion bot just complete the text and don't give any revelant awnsers to the prompt just complete them. Q:Hello how are A:you? Finish My Thought:${input}`,
+          engine: `gpt-3.5-turbo`,
+        }),
+      }
+    );
     const { message } = await response.json();
     setResponse(message);
     setIsTyping(true);
   };
   const handleKeyDown = (e) => {
-    if (e.key === 'Tab') {
+    if (e.key === "Tab") {
       setInput(`${input}` + `${response}`);
       setIsTyping(false);
-    }
-    else if (e.key === 'ArrowRight') {
+    } else if (e.key === "ArrowRight") {
       setInput(`${input}` + `${response}`);
       setIsTyping(false);
-    }
-    
-     
-    else if (e.key === 'ArrowLeft') {
+    } else if (e.key === "ArrowLeft") {
       setInput(`${input}` + `${response}`);
       setIsTyping(false);
     }
@@ -202,19 +197,20 @@ function App() {
   function handleresponseChange(event) {
     event.target.value = `${response}`;
   }
-  
+
   return (
     <>
-      <div className={`App ${theme}`}>
+      <div className={`App dark`}>
         <aside className="sidemenu">
           <div className={`side-menu-button`} onClick={clearChat}>
             <span>+</span>
             New Chat
           </div>
           <div className="models">
-            <h1> Models </h1>
+            <h3> Models </h3>
             <div>
               <select
+              id="select-element"
                 className="select-element"
                 defaultValue="aurora"
                 onChange={(e) => {
@@ -223,146 +219,140 @@ function App() {
               >
                 <option value="aurora">Aurora(Recommended)</option>
                 <option value="resta">Resta</option>
-                <option value="scriptor">Scriptor</option>  
-                <option value="maaz">Maaz</option>
-                </select>
-            </div>
-            <h5>Welcome to the chat with Model Aurora, an AI-powered language model developed by a team of programmers and language experts from Remotine. Users can have natural conversations with this model and receive insightful and relevant responses t ailored to their queries. A range of other models, including Model Resta, Model Scriptor, and Model Maaz, have been created by the same developers and can be explored for their unique features. Engage with Model Aurora to experience its abilities and engage in meaningful discussions.</h5>
-          </div>
-          {/* Functionality To Change Themes */}
-          <div
-            className={`side-menu-button ${theme}`}
-            style={{ marginTop: "0" }}
-            onClick={toggleTheme}
-          >
-  
- 
-      {theme === 'light' ? <SunIcon /> : <MoonIcon />}
-      <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-
-</div>
-        </aside>
-  
-  
-        <section className={`chatbox ${theme}`}>
-        <div className={`chat-log ${theme}`}>
-            {showresta ? (
-              
-              <div className="resta-page">              
-                <div className={`hed ${theme}`}>
-                <div class={`text-gray-800 ${theme}`}>
-    <div className={`container ${theme}`}>
-      <h1>Remotine</h1>
-      <div className={`section ${theme}`}>
-        <h2 className="section-title">Examples</h2>
-        <ul className="section-content">
-          <li>"Explain quantum computing in simple terms"</li>
-          <li>"Got any creative ideas for a 10 year old’s birthday?"</li>
-          <li>"How do I make an HTTP request in Javascript?"</li>
-        </ul>
-      </div>
-  
-      <div className={`section ${theme}`}>
-        <h2 className="section-title">Capabilities</h2>
-        <ul className="section-content">
-          <li>Remembers what user said earlier in the conversation</li>
-          <li>Allows user to provide follow-up corrections</li>
-          <li>Trained to decline inappropriate requests</li>
-        </ul>
-      </div>
-  
-      <div className={`section ${theme}`}>
-        <h2 className="section-title">Limitations</h2>
-        <ul className="section-content">
-          <li>May struggle with complex or ambiguous questions</li>
-          <li>May provide inaccurate or incomplete information</li>
-          <li>May require further clarification or context</li>
-        </ul>
-      </div>
-      </div>
-    </div>
-  </div>
-               
-                </div>
-            ) : (
-              <div className="chat-page">
-                {chatlog.map((message, index) => (
-                  <div
-                    className={`chat-message ${
-                      message.user === "resta" && "resta"
-                    } ${theme}`}
-                    key={index}
-                  >
-                    <div className="chat-message-center">
-                      <div
-                        className={`avatar ${
-                          message.user === "resta" ? "resta" : "user"
-                        } ${theme}`}
-                      >
-                        {message.user === "resta" ? (
-                          <img src={resta} alt="resta avatar" />
-                        ) : (
-                          <img src={user} alt="user avatar" />
-                        )}
-                      </div>
-                      <div className={`message ${theme}`}>
-                        {message.message}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-               
-                          
+                <option value="scriptor">Scriptor</option>
+              </select>
+              <div
+                className="main-option"
+                onClick={() => {
+                  setCurrentModel("aurora");
+                  const selectElement = document.getElementById("select-element");
+                  selectElement.value = "aurora";
+                  console.log("buttonClikced")
+                }}
+              >
+                <span>Smart - Aurora</span>
               </div>
-            )};
-          
-          <div className="chat-input-holder">
+
+              <div
+                className="main-option"
+                onClick={() => {
+                  setCurrentModel("scriptor");
+                  const selectElement = document.getElementById("select-element");
+                  selectElement.value = "scriptor";
+                  console.log("buttonClikced")
+                }}
+              >
+                <span>Code - Scriptor</span>
+              </div>
+            </div>
+            <h5 className="Res">
+              The Model parameter controls the engine used to generate the
+              response.Aurora produces best results.
+            </h5>
+          </div>
+         <div className="temperature">
+         <div>
+              <select
+              id="select-element-temperature"
+                className="select-element"
+                defaultValue="1"
+                onChange={(e) => {
+                  settemperature(e.target.value);
+                } }
+              >
+                <option value="0">0</option>
+                <option value="0.5">0.5</option>
+                <option value="1">1</option>
+              </select>
+              <div
+                className="main-option"
+                onClick={() => {
+                  settemperature(0);
+                  const selectElement = document.getElementById("select-element-temperature");
+                  selectElement.value = "0";
+                  console.log("buttonClikced")
+                }}
+              >
+                <span>0 - Logical</span>
+              </div>
+              <div
+                className="main-option"
+                onClick={() => {
+                  settemperature(0.5);
+                  const selectElement = document.getElementById("select-element-temperature");
+                  selectElement.value = "0.5";
+                  console.log("buttonClikced")
+                }}
+              >
+                <span>0.5 - Balanced</span>
+              </div>
+
+              <div
+                className="main-option"
+                onClick={() => {
+                  settemperature(1);
+                  const selectElement = document.getElementById("select-element-temperature");
+                  selectElement.value = "1";
+                  console.log("buttonClikced")
+                }}
+            >
+                <span>1 - Creative </span>
+              </div>
+            </div>
+            <h5 className="Res">
+             The temperature parameter controls the randomness of the model 0 is the most Logical and 1 is the most Creative.
+</h5>
+         </div>
+        </aside>
+
+        <section className={`chatbox dark`}>
+          <div className={`chat-log dark`}>
+            <div className="chat-page">
+              {chatlog.map((message, index) => (
+                <div
+                  className={`chat-message ${
+                    message.user === "resta" && "resta"
+                  } dark`}
+                  key={index}
+                >
+                  <div className="chat-message-center">
+                    <div
+                      className={`avatar ${
+                        message.user === "resta" ? "resta" : "user"
+                      } dark`}
+                    >
+                      {message.user === "resta" ? (
+                        <img src={resta} alt="resta avatar" />
+                      ) : (
+                        <img src={user} alt="user avatar" />
+                      )}
+                    </div>
+                    <div className={`message dark`}>{message.message}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="chat-input-holder">
               <form onSubmit={handleSubmit}>
                 <input
-                  className={`chat-input-textarea ${theme}`}
+                  className={`chat-input-textarea dark`}
                   rows={1}
                   value={input}
                   type="text"
-                  onKeyDown={handleKeyDown} 
-                  onChange={handleInputChange}  
+                  onKeyDown={handleKeyDown}
+                  onChange={handleInputChange}
                 />
-                {isTyping ? (
-                  <textarea
-                    className={`chat-input-textarea ${theme}`}
-                    rows={1}
-                    value={response}
-                    onChange={handleresponseChange}
-                    readOnly
-                  />
-                ) : (
-                  <textarea
-                    className={`chat-input-textarea ${theme}`}
-                    rows={1}
-                    value={response}
-                    onChange={handleresponseChange}
-                    readOnly
-                  />
-                )}
-
-                 <h6
-              className={`research ${theme}`}
-            >
-              Remotine March 4 Version. Our goal is to make AI systems more natural and safe to interact with. Your feedback will help us improve. If you want to buy our API, please contact us at +923034973191 or email us at maazsaeed726@gmail.com.</h6>
+                <button className="Submit" onClick={handleSubmit}>
+                  Submit
+                </button>
               </form>
-
             </div>
-                </div>
-               
+          </div>
         </section>
-        
       </div>
-      
     </>
   );
-  
 }
-
-
-
 
 export default App;
