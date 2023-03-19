@@ -76,7 +76,7 @@ function App() {
 
       setChatlog([...chatlogNew, { user: "resta", message: substr.trim() }]);
     } else {
-      setChatlog([...chatlogNew, { user: "resta", message: `${message}` }]);
+      setChatlog([...chatlogNew, { user: "resta", message: message }]);
     }
   }
 
