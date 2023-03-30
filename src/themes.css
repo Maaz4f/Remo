@@ -1,0 +1,23 @@
+/* Light mode */
+body.light {
+    background-color: #fff;
+    color: #333;
+  }
+  
+  .side-menu-button.light {
+    background-color:#333;
+    color: #fff;
+    transition: ease 1ms ;
+  }
+  
+  /* Dark mode */
+  body.dark {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .side-menu-button.dark {
+    background-color: #333;
+    color: #fff;
+  }
+  
